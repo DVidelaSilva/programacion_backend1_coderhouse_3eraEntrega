@@ -1,5 +1,6 @@
 const express = require('express')
-const appRouter = require('./router/index')
+const appRouter = require('./router/routers')
+const { connectDB } = require('./config/mongoDB')
 
 // Configuraciones Express
 const app = express()
@@ -8,6 +9,9 @@ const PORT = 8080
 // Configuraciones Middlewares
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
+
+// Configuraciones MongoDB
+connectDB()
 
 
 // Configuraciones Rutas
