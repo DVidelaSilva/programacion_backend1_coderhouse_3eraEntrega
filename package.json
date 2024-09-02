@@ -1,0 +1,19 @@
+{
+  "name": "programacion_backend1_coderhouse_3eraentrega",
+  "version": "1.0.0",
+  "description": "3era entrega CoderHouse Backend 1",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon src/server.js"
+  },
+  "author": "DAVS",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.19.2",
+    "mongoose": "^8.6.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  }
+}
