@@ -6,7 +6,12 @@ const collectionName = 'carts'
 
 const cartsSchema = new Schema ({
 
-    products: []
+   //product: [{ type: Schema.Types.ObjectId, ref: 'Producto' }]
+
+    products: [{
+
+        quantity: { type: Number}
+}]
 })
 
 const cartsModel = model(collectionName, cartsSchema)
@@ -15,4 +20,4 @@ const cartsModel = model(collectionName, cartsSchema)
 module.exports = {
     cartsModel
 }
-
+ 

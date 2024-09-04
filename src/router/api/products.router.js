@@ -34,7 +34,7 @@ router.post('/', async (req, res) => {
         const result = await productService.createProduct(body)
         res.send({status: 'success', message: 'POST desde rutas PRODUCTS', data: result})
     } catch (error){
-        res.status(400).send({ status: 'error', message: error.message })
+        res.status(400).send({ status: 'error!!!!!!', message: error.message })
     }
     
 })
@@ -52,6 +52,9 @@ router.put('/:pid', async (req, res) => {
     }
     
 })
+
+
+
 
 //DELETE
 router.delete('/:pid', async (req, res) => {
