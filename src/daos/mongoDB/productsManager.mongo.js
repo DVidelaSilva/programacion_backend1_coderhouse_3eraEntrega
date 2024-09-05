@@ -7,19 +7,48 @@ class ProductManagerMongo {
         this.model = productModel
     }
 
-    // GET (READ) a MongoDB
+//?? ***************** READ a MongoDB *****************
     getProducts = async () => this.model.find({})
 
-    // GET by opts (READ) a MongoDB
+/*     //***************** READ con Paginación *****************
+getProducts = async (page = 1, limit = 10, sort = {}) => {
+        // Paginación usando mongoose-paginate-v2
+        const options = {
+            page: parseInt(page),
+            limit: parseInt(limit),
+            sort: sort
+        };
+
+        const result = await this.model.paginate({}, options);
+
+        return {
+            products: result.docs, // Array de productos
+            totalPages: result.totalPages,
+            currentPage: result.page,
+            hasPrevPage: result.hasPrevPage,
+            hasNextPage: result.hasNextPage,
+            prevPage: result.prevPage,
+            nextPage: result.nextPage
+        };
+    };
+
+    // Otros métodos permanecen igual...
+
+ */
+
+//?? ***************** READ por _id MongoDB *****************
     getProduct = async opts => this.model.findOne({_id: opts})
 
-    // POST (CREATE) a MongoDB
+
+//?? ***************** CREATE a MongoDB *****************
     createProduct = async newProduct => await this.model.create(newProduct)
 
-    // PUT (UPDATE) a MongoDB
+
+//?? ***************** UPDATE a MongoDB *****************
     updateProduct = async (opts, field) => this.model.updateOne({_id: opts}, field)
     
-    // DELETE (DELETE) a MongoDB
+    
+//?? ***************** DELETE a MongoDB *****************
     deleteProduct = async opts => this.model.deleteOne({_id: opts})
 
 }

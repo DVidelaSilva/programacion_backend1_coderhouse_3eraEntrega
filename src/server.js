@@ -1,6 +1,7 @@
 const express = require('express')
 const appRouter = require('./router/routers')
 const { connectDB } = require('./config/mongoDB')
+const handlebars = require('express-handlebars')
 
 // Configuraciones Express
 const app = express()
@@ -13,6 +14,10 @@ app.use(express.urlencoded({extended: true}))
 // Configuraciones MongoDB
 connectDB()
 
+// Configuracion Handlebars
+app.engine('handlebars', handlebars.engine())
+app.set('view engine', 'handlebars')
+app.set('views', __dirname + '/views')
 
 // Configuraciones Rutas
 app.use(appRouter)
