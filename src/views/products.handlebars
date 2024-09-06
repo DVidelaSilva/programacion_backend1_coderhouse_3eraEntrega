@@ -1,24 +1,127 @@
-<h2>Listado de Pizzas Vendidas el finde</h2>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listado de Productos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: black; /* Color del título principal */
+        }
+        .card {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .card img {
+            border-radius: 8px;
+            max-width: 150px;
+            height: auto;
+        }
+        .card-details {
+            flex: 1;
+        }
+        .card-title {
+            color: #121213; /* Color del título del producto */
+            font-size: 1.4em;
+            margin: 0;
+        }
+        .card-actions {
+            margin-top: 10px;
+        }
+        .card-actions button {
+            background-color: #c1a508; /* Color del botón */
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .card-actions button:hover {
+            background-color: #4d514e; /* Color del botón al pasar el ratón */
+        }
+        .pagination {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .pagination a {
+            color: black;
+            text-decoration: none;
+            margin: 0 5px;
+            font-size: 20px;
+        }
+        .pagination a:hover {
+            text-decoration: underline;
+        }
+        .back-link {
+            display: block;
+            text-align: center;
+            color: black;
+            text-decoration: none;
+            font-size: 1em;
+            margin-top: 20px;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Productos</h1>
 
-<ul>
-    {{#each products}}
-        <li>Title: {{this.title}}</li>
-        <li>Descripcion: {{this.description}}</li>
-        <li>Code: {{this.code}}</li>
-        <li>Price: $ {{this.price}}</li>
-        <li>Status: $ {{this.status}}</li>
-        <li>Stock: $ {{this.stock}}</li>
-        <li>Category: {{this.category}}</li>
-        <br>
-    {{/each}}
-</ul>
+        {{#each products}}
+            <div class="card">
+                <div class="card-details">
+                    <h3 class="card-title">{{this.title}}</h3>
+                    <p><strong>Descripción:</strong>  {{this.description}}</p>
+                    <p><strong>Code:</strong> {{this.code}}</p>
+                    <p><strong>Price:</strong> $ {{this.price}}</p>
+                    <p><strong>Status:</strong> {{this.status}}</p>
+                    <p><strong>Stock:</strong> {{this.stock}}</p>
+                    <p><strong>Category:</strong> {{this.category}}</p>
+                    <div class="card-actions">
+                        <form>
+                            <button type="submit">Agregar al carrito</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        {{/each}}
 
-        {{#if hasPrevPage}}
-            <a href="/products?page={{prevPage}}&limit={{limit}}">Previous</a>
-        {{/if}}
+        <div class="pagination">
+            {{#if hasPrevPage}}
+                <a href="/products?page={{prevPage}}&limit={{limit}}">Previous</a>
+            {{/if}}
 
-        {{#if hasNextPage}}
-            <a href="/products?page={{nextPage}}&limit={{limit}}">Next</a>
-        {{/if}}
+            {{#if hasNextPage}}
+                <a href="/products?page={{nextPage}}&limit={{limit}}">Next</a>
+            {{/if}}
+        </div>
 
-<p>Pagina {{currentPage}} de {{totalPages}}</p>
+        <a href="/products" class="back-link">Volver a productos</a>
+    </div>
+</body>
+</html>

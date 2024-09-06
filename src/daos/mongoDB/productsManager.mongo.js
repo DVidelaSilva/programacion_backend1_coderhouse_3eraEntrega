@@ -8,7 +8,20 @@ class ProductManagerMongo {
     }
 
 //?? ***************** READ a MongoDB *****************
-    getProducts = async () => this.model.find({})
+    getProducts = async (filter = {}, sort = {}, limit = 10, page = 1) => {
+        try {
+            const skip = (page - 1) * limit
+
+            const products = await this.model.find(filter)  
+                .sort(sort) 
+                .skip(skip)  
+                .limit(limit)
+
+            return products
+        } catch (error) {
+            throw new Error('Error al obtener productos: ' + error.message);
+        }
+    };
 
 
 //?? ***************** READ por _id MongoDB *****************

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrito de Compras</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: black; /* Color del título principal */
+        }
+        .card {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .card img {
+            border-radius: 8px;
+            max-width: 150px;
+            height: auto;
+        }
+        .card-details {
+            flex: 1;
+        }
+        .card-title {
+            color: black; /* Color del título del producto */
+            font-size: 1.2em;
+            margin: 0;
+        }
+        .card-description {
+            color: #666;
+        }
+        .card-actions {
+            margin-top: 10px;
+        }
+        .card-actions span {
+            font-weight: bold;
+        }
+        .back-link {
+            display: block;
+            text-align: center;
+            color: black;
+            text-decoration: none;
+            font-size: 1.5em;
+            margin-top: 20px;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Carrito ID: {{cart._id}}</h1>
+
+        {{#each products}}
+            <div class="card">
+                <div class="card-details">
+                    <h3 class="card-title">{{this.product.title}}</h3>
+                    <p><strong>Descripción:</strong> {{this.product.description}}</p>
+                    <p><strong>Code:</strong> {{this.product.code}}</p>
+                    <p><strong>Price:</strong> $ {{this.product.price}}</p>
+                    <p><strong>Status:</strong> {{this.product.status}}</p>
+                    <p><strong>Stock:</strong> {{this.product.stock}}</p>
+                    <p><strong>Category:</strong> {{this.product.category}}</p>
+                    <p><strong>Quantity:</strong> {{this.quantity}}</p>
+                </div>
+            </div>
+        {{/each}}
+
+        <a href="/products" class="back-link">Volver a productos</a>
+    </div>
+</body>
+</html>

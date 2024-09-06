@@ -28,7 +28,6 @@ router.get('/', async (req, res) => {
 
 
 
-
 //***************** GET by ID *****************
 
 router.get('/:pid', async (req, res) => {
@@ -46,14 +45,12 @@ router.get('/:pid', async (req, res) => {
             res.send({status: 'success', message: 'GET by ID desde rutas CARTS', data: result})
             return result
         } else {
-            throw new Error (`Producto ID '${pid}' NO encontrado en BD`)
+            throw new Error (`Carrito ID '${pid}' NO encontrado en BD`)
         }
     } catch (error){
         res.status(400).send({ status: 'error', message: error.message })
-    }   
+    }  
 });
-
-
 
 
 
@@ -76,13 +73,14 @@ router.post('/', async (req, res) => {
 
 router.post('/:pidCart/products/:pidProduct', async (req, res) => {
     try {
-        const { pidCart, pidProduct } = req.params;
+        const { pidCart, pidProduct } = req.params
         // Valida que los ID`s  sean un ID Mongo Valido
         if (!isValidObjectId(pidCart) || !isValidObjectId(pidProduct) ) {
             throw new Error (`Uno de los ID´s o ambos, no son ID de mongoDB validos`)
         } 
         // Busqueda y validacion de carrito en BD
         const resultCartFind = await cartService.getCart({_id: pidCart})
+
         if (!resultCartFind){
             throw new Error (`El ID carrito ingresado no existe en BD`)
         }
@@ -102,10 +100,10 @@ router.post('/:pidCart/products/:pidProduct', async (req, res) => {
             throw new Error (`quantity no es un Numero, o no es mayor o igual a 1`)
         }
         // Agregar producto a carrito con quantity indicada
-        const result = await cartService.createProductToCart(pidCart, pidProduct, body);
-        res.send({ status: 'success', message: 'Producto añadido al carrito', data: result });
+        const result = await cartService.createProductToCart(pidCart, pidProduct, body)
+        res.send({ status: 'success', message: 'Producto añadido al carrito', data: result })
     } catch (error) {
-        res.status(400).send({ status: 'error', message: error.message });
+        res.status(400).send({ status: 'error', message: error.message })
     }
 });
 
@@ -115,7 +113,7 @@ router.post('/:pidCart/products/:pidProduct', async (req, res) => {
 
 router.put('/:pidCart/products/:pidProduct', async (req, res) => {
     try {
-        const { pidCart, pidProduct } = req.params;
+        const { pidCart, pidProduct } = req.params
         // Valida que los ID`s  sean un ID Mongo Valido
         if (!isValidObjectId(pidCart) || !isValidObjectId(pidProduct) ) {
             throw new Error (`Uno de los ID´s o ambos, no son ID de mongoDB validos`)
@@ -131,7 +129,7 @@ router.put('/:pidCart/products/:pidProduct', async (req, res) => {
             throw new Error (`El ID producto ingresado no existe en BD`)
         }
 
-        const { quantity } = req.body;
+        const { quantity } = req.body
 
         // Valida que la quantity este en el request
         if (quantity === undefined) {
@@ -143,10 +141,10 @@ router.put('/:pidCart/products/:pidProduct', async (req, res) => {
         }
 
         // Actualiza quantity indicada
-        const result = await cartService.updateCart(pidCart, pidProduct, quantity);
-        res.send({ status: 'success', message: 'Cantidad del producto actualizada en el carrito', data: result });
+        const result = await cartService.updateCart(pidCart, pidProduct, quantity)
+        res.send({ status: 'success', message: 'Cantidad del producto actualizada en el carrito', data: result })
     } catch (error) {
-        res.status(400).send({ status: 'error', message: error.message });
+        res.status(400).send({ status: 'error', message: error.message })
     }
 });
 
@@ -156,8 +154,8 @@ router.put('/:pidCart/products/:pidProduct', async (req, res) => {
 
 router.put('/:pidCart', async (req, res) => {
     try {
-        const { pidCart } = req.params;
-        const { products } = req.body; 
+        const { pidCart } = req.params
+        const { products } = req.body
 
         // Validar que el ID del carrito sea válido
         if (!isValidObjectId(pidCart)) {
@@ -176,19 +174,19 @@ router.put('/:pidCart', async (req, res) => {
         // Validar que todos los productos en el array sean válidos
         for (const product of products) {
             if (!isValidObjectId(product._id)) {
-                return res.send({ status: 'error', message: `El ID del producto ${product._id} no es válido` });
+                return res.send({ status: 'error', message: `El ID del producto ${product._id} no es válido` })
             }
             if(isNaN(product.quantity) || product.quantity <= 0 ){
-                return res.send({ status: 'error', message: `quantity no es un numero, o no es mayor o igual a 1` });
+                return res.send({ status: 'error', message: `quantity no es un numero, o no es mayor o igual a 1` })
             }
         }
 
         // Actualizar el carrito con el nuevo array de productos
-        const result = await cartService.updateProduct(pidCart, products);
-        res.send({ status: 'success', message: 'Productos actualizados en el carrito'});
+        const result = await cartService.updateProduct(pidCart, products)
+        res.send({ status: 'success', message: 'Productos actualizados en el carrito'})
 
     } catch (error) {
-        res.status(400).send({ status: 'error', message: error.message });
+        res.status(400).send({ status: 'error', message: error.message })
     }
 });
 
@@ -199,7 +197,7 @@ router.put('/:pidCart', async (req, res) => {
 
 router.delete('/:pid', async (req, res) => {
     try {
-        const { pid } = req.params;
+        const { pid } = req.params
         // Valida que ID sea un ID Mongo Valido
         if (!isValidObjectId(pid)) {
             throw new Error (`El ID '${pid}' ingresado no es un ID de mongoDB válido`)
@@ -210,9 +208,9 @@ router.delete('/:pid', async (req, res) => {
             throw new Error (`El ID carrito ingresado no existe en BD`)
         }
         const result = await cartService.deleteCart(pid);
-        res.send({ status: 'success', message: 'Productos eliminados del carrito', data: result });
+        res.send({ status: 'success', message: 'Productos eliminados del carrito', data: result })
     } catch (error) {
-        res.status(400).send({ status: 'error', message: error.message });
+        res.status(400).send({ status: 'error', message: error.message })
     }
 });
 
@@ -222,7 +220,7 @@ router.delete('/:pid', async (req, res) => {
 
 router.delete('/:pidCart/products/:pidProduct', async (req, res) => {
     try {
-        const { pidCart, pidProduct } = req.params;
+        const { pidCart, pidProduct } = req.params
         // Valida que los ID`s  sean un ID Mongo Valido
         if (!isValidObjectId(pidCart) || !isValidObjectId(pidProduct) ) {
             throw new Error (`Uno de los ID´s o ambos, no son ID de mongoDB validos`)
@@ -238,23 +236,21 @@ router.delete('/:pidCart/products/:pidProduct', async (req, res) => {
             throw new Error (`El ID producto ingresado no existe en BD`)
         }
 
-        const result = await cartService.deleteProductFromCart(pidCart, pidProduct);
+        const result = await cartService.deleteProductFromCart(pidCart, pidProduct)
         let productDelete = result.modifiedCount
 
         // Valida si producto se encuentra en carrito
         if(productDelete === 0){
-            res.send({ status: 'success', message: 'Producto No se encuentra en el carrito'});
+            res.send({ status: 'success', message: 'Producto No se encuentra en el carrito'})
         } else{
-            res.send({ status: 'success', message: 'Producto eliminado del carrito'});
+            res.send({ status: 'success', message: 'Producto eliminado del carrito'})
         }
 
 
     } catch (error) {
-        res.status(400).send({ status: 'error', message: error.message });
+        res.status(400).send({ status: 'error', message: error.message })
     }
 });
-
-
 
 
 

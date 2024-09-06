@@ -9,18 +9,29 @@ const productService = new ProductManagerMongo
 
 //***************** GET *****************
 
-
-
 router.get('/', async (req, res) => {
-    try{
-        const result = await productService.getProducts()
-        //Validaciones
+    try {
+        // Extraer parámetros de consulta
+        let sortOrder = req.query.sort === 'desc' ? -1 : 1 // Orden de productos
+        let sort = req.query.sort ? { price: sortOrder } : {} // Elemento a ordenar
+        let query = req.query.query || '' // Filtro de búsqueda
+
+        // paginación
+        let page = parseInt(req.query.page, 10) || 1 // Página actual
+        let limit = parseInt(req.query.limit, 10) || 10 // Límite de productos por página
+
+        // Aplicar filtro de búsqueda si hay un query por category
+        const filter = query ? { category: new RegExp(query, 'i') } : {}
+        
+        const result = await productService.getProducts(filter, sort, limit, page)
+
         if (result.length === 0){
             res.send({status: 'success', message: 'GET desde rutas PRODUCTS', data: 'No existen productos creados'})
         } else {
             res.send({status: 'success', message: 'GET desde rutas PRODUCTS', data: result})
         }
-    } catch (error){
+        
+    } catch (error) {
         res.status(400).send({ status: 'error', message: error.message })
     }
 });
