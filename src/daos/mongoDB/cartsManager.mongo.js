@@ -60,6 +60,16 @@ class CartManagerMongo {
             await cart.save();
             return cart; // Devolver el carrito actualizado
     };
+
+
+//?? ***************** UPDATE array productos en carrito a MongoDB *****************
+    updateProduct = async (cartId, products) => {
+
+        return await this.model.updateOne(
+            { _id: cartId },
+            { $set: { products } }
+        );
+    };
         
 
 
@@ -74,7 +84,23 @@ class CartManagerMongo {
             await cart.save();
             return cart; // Devolver el carrito actualizado (vacío)
     };
+
+
+
+//?? ***************** DELETE producto de carrito a MongoDB *****************
+
+    deleteProductFromCart = async (idCart, idProduct) => {
+
+        return await this.model.updateOne(
+            { _id: idCart },
+            { $pull: { products: { _id: idProduct } } }
+        );
+    
+    }
+    
 };
+
+
 
 
 

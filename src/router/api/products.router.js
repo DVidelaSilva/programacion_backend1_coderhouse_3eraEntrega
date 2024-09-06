@@ -26,32 +26,6 @@ router.get('/', async (req, res) => {
 });
 
 
-/* router.get('/', async (req, res) => {
-    try {
-        const { page = 1, limit = 1, sort = 'asc' } = req.query;
-        const sortOrder = sort === 'desc' ? -1 : 1;
-
-        const result = await productService.getProducts(parseInt(page), parseInt(limit), { price: sortOrder });
-
-        const productsResultadoFinal = result.products.map( p => {
-            const {_id, ...rest} = p.toObject()
-            return rest;
-        })
-
-        res.render('products', {
-            products: productsResultadoFinal,
-            totalPages: result.totalPages,
-            currentPage: result.currentPage,
-            hasPrevPage: result.hasPrevPage,
-            hasNextPage: result.hasNextPage,
-            prevPage: result.prevPage,
-            nextPage: result.nextPage
-        });
-    } catch (error) {
-        res.status(400).send({ status: 'error', message: error.message });
-    }
-});
- */
 
 //***************** GET by ID *****************
 

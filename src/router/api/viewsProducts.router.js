@@ -9,17 +9,20 @@ const router = Router()
 
 router.get('/products', async (req, res) => {
 
-    let page = req.query.page || 1;
-    let limit = 3;
-    sortBy = req.query.sortBy || 'code'; // Por defecto ordenar por 'price'
-    let sortOrder = req.query.sortOrder === 'desc' ? -1 : 1; // Orden descendente si se pasa 'desc'
+    // Query Params
+    let page = parseInt(req.query.page) || 1; //Pagina
+    let limit = parseInt(req.query.limit) || 10; // Limite de productos
+    let sortOrder = req.query.sort === 'desc' ? -1 : 1; // Orden de productos
+    let sort = req.query.sort ? { price: sortOrder } : {}; // Elemento a ordenar    
+    let query = req.query.query || ''; // Filtro de búsqueda
 
 
     try {
+         // Aplicar filtro de búsqueda si hay un query por title
+        const filter = query ? { category: new RegExp(query, 'i') } : {};
 
-        const sort = { [sortBy]: sortOrder }; // 
-
-        const listadoProducts = await productModel.paginate({}, {limit, page, sort})
+        // Paginacion
+        const listadoProducts = await productModel.paginate(filter, { limit, page, sort });
     
         const productsResultadoFinal = listadoProducts.docs.map( p => {
             const {_id, ...rest} = p.toObject()

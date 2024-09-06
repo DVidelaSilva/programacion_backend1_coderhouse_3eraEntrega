@@ -74,7 +74,7 @@ router.post('/', async (req, res) => {
 
 //***************** POST Anadir Productos al carrito *****************
 
-router.post('/:pidCart/product/:pidProduct', async (req, res) => {
+router.post('/:pidCart/products/:pidProduct', async (req, res) => {
     try {
         const { pidCart, pidProduct } = req.params;
         // Valida que los ID`s  sean un ID Mongo Valido
@@ -113,7 +113,7 @@ router.post('/:pidCart/product/:pidProduct', async (req, res) => {
 
 //***************** PUT Actualizar cantidad del producto en el carrito *****************
 
-router.put('/:pidCart/product/:pidProduct', async (req, res) => {
+router.put('/:pidCart/products/:pidProduct', async (req, res) => {
     try {
         const { pidCart, pidProduct } = req.params;
         // Valida que los ID`s  sean un ID Mongo Valido
@@ -151,6 +151,50 @@ router.put('/:pidCart/product/:pidProduct', async (req, res) => {
 });
 
 
+
+//***************** PUT Actualizar array de productos en request *****************
+
+router.put('/:pidCart', async (req, res) => {
+    try {
+        const { pidCart } = req.params;
+        const { products } = req.body; 
+
+        // Validar que el ID del carrito sea válido
+        if (!isValidObjectId(pidCart)) {
+            throw new Error ('El ID del carrito no es válido')
+        }
+        // Validar que el array de productos esté presente y sea un array
+        if (!Array.isArray(products)) {
+            throw new Error ('El cuerpo de la solicitud debe contener un array de productos')
+
+        }
+        // Busqueda y validacion de Carrito en BD
+        const resultCartFind = await cartService.getCart({_id: pidCart})
+        if (!resultCartFind){
+            throw new Error (`El ID carrito ingresado no existe en BD`)
+        }
+        // Validar que todos los productos en el array sean válidos
+        for (const product of products) {
+            if (!isValidObjectId(product._id)) {
+                return res.send({ status: 'error', message: `El ID del producto ${product._id} no es válido` });
+            }
+            if(isNaN(product.quantity) || product.quantity <= 0 ){
+                return res.send({ status: 'error', message: `quantity no es un numero, o no es mayor o igual a 1` });
+            }
+        }
+
+        // Actualizar el carrito con el nuevo array de productos
+        const result = await cartService.updateProduct(pidCart, products);
+        res.send({ status: 'success', message: 'Productos actualizados en el carrito'});
+
+    } catch (error) {
+        res.status(400).send({ status: 'error', message: error.message });
+    }
+});
+
+
+
+
 //**********  DELETE (Vaciar productos en el carrito pero no eliminar el carrito) *****************
 
 router.delete('/:pid', async (req, res) => {
@@ -171,6 +215,49 @@ router.delete('/:pid', async (req, res) => {
         res.status(400).send({ status: 'error', message: error.message });
     }
 });
+
+
+
+//***************** DELETE Eliminar Productos del carrito *****************
+
+router.delete('/:pidCart/products/:pidProduct', async (req, res) => {
+    try {
+        const { pidCart, pidProduct } = req.params;
+        // Valida que los ID`s  sean un ID Mongo Valido
+        if (!isValidObjectId(pidCart) || !isValidObjectId(pidProduct) ) {
+            throw new Error (`Uno de los ID´s o ambos, no son ID de mongoDB validos`)
+        } 
+        // Busqueda y validacion de carrito en BD
+        const resultCartFind = await cartService.getCart({_id: pidCart})
+        if (!resultCartFind){
+            throw new Error (`El ID carrito ingresado no existe en BD`)
+        }
+        // Busqueda y validacion de Producto en BD
+        const resultProductFind = await productService.getProduct({_id: pidProduct})
+        if (!resultProductFind){
+            throw new Error (`El ID producto ingresado no existe en BD`)
+        }
+
+        const result = await cartService.deleteProductFromCart(pidCart, pidProduct);
+        let productDelete = result.modifiedCount
+
+        // Valida si producto se encuentra en carrito
+        if(productDelete === 0){
+            res.send({ status: 'success', message: 'Producto No se encuentra en el carrito'});
+        } else{
+            res.send({ status: 'success', message: 'Producto eliminado del carrito'});
+        }
+
+
+    } catch (error) {
+        res.status(400).send({ status: 'error', message: error.message });
+    }
+});
+
+
+
+
+
 
 
 module.exports = router
